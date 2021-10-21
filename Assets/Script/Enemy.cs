@@ -5,6 +5,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour, IDamageable
 {
     public float maxHealth = 10f;
+    public float outlineOpen = 3f;
+    public float outlineClose = -10f;
 
     [Header("Status")]
     public float speed = 5f;
