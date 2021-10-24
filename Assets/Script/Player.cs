@@ -21,13 +21,17 @@ public class Player : MonoBehaviour
     public float attackDelay = 2f;
     public LayerMask enemyLayer = 0;
     public Transform projectile;
+    public ParticleSystem slashParticle;
 
     bool attemptedDodge = false;
     bool attemptedAttack = false;
     public float timeUntilAttackReadied = 2f;
+
+    Animator animator;
     
     private void Start() {
         rigidbody = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void FixedUpdate() {
@@ -48,6 +52,12 @@ public class Player : MonoBehaviour
 
         rigidbody.velocity = diraction * moveSpeed;
 
+        if(horizontal != 0 || vertical != 0){
+            animator.SetBool("run",true);
+        }else{
+            animator.SetBool("run",false);
+        }
+
         HandleRun();
     }
 
@@ -61,8 +71,10 @@ public class Player : MonoBehaviour
 
     void HandleMeleeAttack(){
         attemptedAttack = Input.GetKeyDown(KeyCode.Mouse0);
-    
+
         if(attemptedAttack && timeUntilAttackReadied <= 0){
+            animator.SetTrigger("slash");
+            Invoke("PlaySlashVFX",0.7f);
             Collider2D[] overlapColliders = Physics2D.OverlapCircleAll(attackOrigin.position,attackRadius,enemyLayer);
             for(int i = 0; i < overlapColliders.Length; i++){
                 IDamageable enemyAttributes = overlapColliders[i].GetComponent<IDamageable>();
@@ -111,5 +123,9 @@ public class Player : MonoBehaviour
         if(attackOrigin != null){
             Gizmos.DrawWireSphere(attackOrigin.position,attackRadius);
         }
+    }
+
+    public void PlaySlashVFX(){
+        slashParticle.Play();
     }
 }

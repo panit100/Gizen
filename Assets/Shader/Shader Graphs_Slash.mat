@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Enemy
-  m_Shader: {fileID: -6465566751694194690, guid: 216d3646e71cde448825bc690707b992, type: 3}
+  m_Name: Shader Graphs_Slash
+  m_Shader: {fileID: -6465566751694194690, guid: 6a9204a09c7daba4299a7d7317e3a599, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,8 +19,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
+    - _Slash:
+        m_Texture: {fileID: 2800000, guid: bda2be8bf037c224d97c75cc47dff262, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -35,8 +35,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - Vector1_47e1c134708248edbab3b01ead1100f8: 0.0072
+    m_Floats: []
     m_Colors:
-    - Color_0427c4b69dcd4c7c80f02363b6629880: {r: 0.65205944, g: 0.10924557, b: 0.10924557, a: 1}
+    - Color_f21cc50ce19a49dea022cc27d3029458: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
