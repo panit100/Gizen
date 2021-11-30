@@ -12,8 +12,9 @@ public class EnemyAI1 : MonoBehaviour
     public float radius = 1;
     public Rigidbody2D rigidbody;
     public float rayLength = 1f;
+    public float distBTWPlayer;
 
-    // public float getAwayDist = 1f;
+    public float getAwayDist = 1f;
     private void Start() {
         // player = FindObjectOfType<Player>().GetComponent<Player>();
 
@@ -22,9 +23,12 @@ public class EnemyAI1 : MonoBehaviour
 
     private void Update() {
         DotProductCheck();
+        distBTWPlayer = Vector2.Distance(transform.position,player.transform.position);
 
+   
         NormalAIMove();
         // ShapingAIMOve();
+        
     }
 
     void DotProductCheck(){
@@ -78,6 +82,7 @@ public class EnemyAI1 : MonoBehaviour
 
     void NormalAIMove(){
         float mostValueDot = 0;
+
         foreach(float n in dot){
             if(n > mostValueDot){
                 mostValueDot = n;
@@ -85,7 +90,7 @@ public class EnemyAI1 : MonoBehaviour
         }
 
         for(int i = 0; i < dot.Count; i ++){
-            if(mostValueDot == dot[i]){
+            if(mostValueDot == dot[i] && distBTWPlayer > getAwayDist){
                 rigidbody.velocity = ray[i] * moveSpeed * Time.deltaTime;
             }
         }

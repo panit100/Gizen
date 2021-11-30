@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public float moveSpeed = 10f;
     float horizontal = 0;
     float vertical = 0;
-    Vector2 diraction;
+    Vector2 oldDiraction;
     Rigidbody2D rigidbody;
 
     [Header("Combat")]
@@ -22,12 +22,25 @@ public class Player : MonoBehaviour
     public LayerMask enemyLayer = 0;
     public Transform projectile;
     public ParticleSystem slashParticle;
-
     bool attemptedDodge = false;
     bool attemptedAttack = false;
     public float timeUntilAttackReadied = 2f;
 
+    [Header("SwipeDetect")]
+    InputManager inputManager;
+    public Vector2 startPosition;
+    public Vector2 endPosition;
+    public Vector2 direction2D;
+    float startTime;
+    float endTime;
+
+
+    [Header("Other")]
     Animator animator;
+
+    private void Awake() {
+        inputManager = InputManager.Instance;
+    }
     
     private void Start() {
         rigidbody = GetComponent<Rigidbody2D>();
@@ -35,39 +48,17 @@ public class Player : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        Move();
+        // Move();
 
         if(playerAttackType == AttackType.MELEEATTACK){
             HandleMeleeAttack();
         }else if(playerAttackType == AttackType.RANGEATTACK){
             HandleRangeAttack();
         }
+
     }
 
-    void Move(){
-        horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
-
-        diraction = new Vector2(horizontal,vertical);
-
-        rigidbody.velocity = diraction * moveSpeed;
-
-        if(horizontal != 0 || vertical != 0){
-            animator.SetBool("run",true);
-        }else{
-            animator.SetBool("run",false);
-        }
-
-        HandleRun();
-    }
-
-    void HandleRun(){
-        if(horizontal > 0 && transform.rotation.y != 0){
-            transform.rotation = Quaternion.Euler(0,0,0);
-        }else if(horizontal < 0 && transform.rotation.y == 0){
-            transform.rotation = Quaternion.Euler(0,180f,0);
-        }
-    }
+    
 
     void HandleMeleeAttack(){
         attemptedAttack = Input.GetKeyDown(KeyCode.Mouse0);
@@ -128,4 +119,95 @@ public class Player : MonoBehaviour
     public void PlaySlashVFX(){
         slashParticle.Play();
     }
+
+    //-------------------Move by swipe detecttion----------------
+    [SerializeField]
+    private Coroutine coroutine;
+
+    private void OnEnable() {
+        inputManager.OnStartTouch += SwipeStart;
+        inputManager.OnAlreadyTouch += SwipePerformed;
+        inputManager.OnEndTouch += SwipeEnd;
+    }
+
+    private void OnDisable() {
+        inputManager.OnStartTouch -= SwipeStart;
+        inputManager.OnAlreadyTouch -= SwipePerformed;
+        inputManager.OnEndTouch -= SwipeEnd;
+    }
+
+    void SwipeStart(Vector2 position){
+        startPosition = position;
+    }
+
+    void SwipePerformed(Vector2 position){
+        endPosition = position;
+        coroutine = StartCoroutine(currentEndPosition());
+    }
+
+    void SwipeEnd(Vector2 position){
+        StopCoroutine(coroutine);
+        rigidbody.velocity = Vector2.zero;
+    }
+
+    IEnumerator currentEndPosition(){
+        while(true){
+            endPosition = inputManager.PrimaryPosition();
+            DectectSwipe();
+            yield return null;
+        }
+    }
+
+    void DectectSwipe(){
+        Vector3 direction3D = endPosition - startPosition;
+        direction2D = new Vector2(direction3D.x,direction3D.y).normalized;
+        MoveBySwipe(direction2D);          
+    }
+    void MoveBySwipe(Vector2 direction){
+        rigidbody.velocity = direction * moveSpeed;
+
+        if(rigidbody.velocity != Vector2.zero){
+            animator.SetBool("run",true);
+        }else{
+            animator.SetBool("run",false);
+        }
+
+        HandleRun(direction);
+    }
+
+    void HandleRun(Vector2 direction){
+        if(direction.x >= 0){
+            transform.rotation = Quaternion.Euler(0,0,0);
+        }else if(direction.x < 0){
+            transform.rotation = Quaternion.Euler(0,180f,0);
+        }
+    }
+    //-----------------------------------------------
+
+    //---------------Move by Old input---------------
+    // void Move(){
+    //     horizontal = Input.GetAxisRaw("Horizontal");
+    //     vertical = Input.GetAxisRaw("Vertical");
+
+    //     oldDiraction = new Vector2(horizontal,vertical);
+
+    //     rigidbody.velocity = oldDiraction * moveSpeed;
+
+    //     if(horizontal != 0 || vertical != 0){
+    //         animator.SetBool("run",true);
+    //     }else{
+    //         animator.SetBool("run",false);
+    //     }
+
+    //     OldHandleRun();
+    // }
+
+    // void OldHandleRun(){
+    //     if(horizontal > 0 && transform.rotation.y != 0){
+    //         transform.rotation = Quaternion.Euler(0,0,0);
+    //     }else if(horizontal < 0 && transform.rotation.y == 0){
+    //         transform.rotation = Quaternion.Euler(0,180f,0);
+    //     }
+    // }
+    //----------------------------------------------
 }

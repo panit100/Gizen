@@ -24,7 +24,7 @@ public class @PlayerControl : IInputActionCollection, IDisposable
                     ""id"": ""9b246054-62a9-477c-9540-d55b691ff2fa"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press""
+                    ""interactions"": ""Hold(pressPoint=0.1)""
                 },
                 {
                     ""name"": ""Primary Position"",

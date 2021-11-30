@@ -6,9 +6,13 @@ using UnityEngine.InputSystem;
 [DefaultExecutionOrder(-1)]
 public class InputManager : Singleton<InputManager>
 {
-    public delegate void StartTouch(Vector2 position,float time);
+    public delegate void StartTouch(Vector2 position);
+    // public delegate void StartTouch(Vector2 position);
     public event StartTouch OnStartTouch;
-    public delegate void EndTouch(Vector2 position,float time);
+    public delegate void EndTouch(Vector2 position);
+    public delegate void AlreadyTouch(Vector2 position);
+    // public delegate void EndTouch(Vector2 position);
+    public event StartTouch OnAlreadyTouch;
     public event StartTouch OnEndTouch;
     
     PlayerControl playerControl;
@@ -23,6 +27,7 @@ public class InputManager : Singleton<InputManager>
     void Start()
     {
         playerControl.PlayerControls.PrimaryContact.started += ctx => StartTouchPrimary(ctx);
+        playerControl.PlayerControls.PrimaryContact.performed += ctx => AlreadyTouchPrimary(ctx);
         playerControl.PlayerControls.PrimaryContact.canceled += ctx => EndTouchPrimary(ctx);
     }
 
@@ -33,21 +38,33 @@ public class InputManager : Singleton<InputManager>
     private void OnDisable() {
         playerControl.Disable();
     }
-
+    
     void StartTouchPrimary(InputAction.CallbackContext context){
-        Debug.Log(1);
+    // void StartTouchPrimary(){
         if(OnStartTouch != null){
             Vector2 input2 = playerControl.PlayerControls.PrimaryPosition.ReadValue<Vector2>();
             Vector3 input3 = ScreenToWorld(mainCamera,input2);
-            OnStartTouch(input3,(float)context.startTime);
+            OnStartTouch(input3);
+            // OnStartTouch(input3);
+        }
+    }
+
+    void AlreadyTouchPrimary(InputAction.CallbackContext context){
+    // void EndTouchPrimary(){
+        if(OnAlreadyTouch != null){
+            Vector2 input2 = playerControl.PlayerControls.PrimaryPosition.ReadValue<Vector2>();
+            Vector3 input3 = ScreenToWorld(mainCamera,input2);
+            OnAlreadyTouch(input3);
+            // OnEndTouch(input3);
         }
     }
     void EndTouchPrimary(InputAction.CallbackContext context){
-        Debug.Log(2);
+    // void EndTouchPrimary(){
         if(OnEndTouch != null){
             Vector2 input2 = playerControl.PlayerControls.PrimaryPosition.ReadValue<Vector2>();
             Vector3 input3 = ScreenToWorld(mainCamera,input2);
-            OnEndTouch(input3,(float)context.startTime);
+            OnEndTouch(input3);
+            // OnEndTouch(input3);
         }
     }
 
@@ -56,7 +73,7 @@ public class InputManager : Singleton<InputManager>
         return camera.ScreenToWorldPoint(position);
     }
 
-    Vector2 PrimaryPosition(){
+    public Vector2 PrimaryPosition(){
         Vector2 input2 = playerControl.PlayerControls.PrimaryPosition.ReadValue<Vector2>();
         Vector3 input3 = ScreenToWorld(mainCamera,input2);
         return input3;

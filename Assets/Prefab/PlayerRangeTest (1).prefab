@@ -13,13 +13,13 @@ GameObject:
   - component: {fileID: 942630031029912764}
   - component: {fileID: 942630031029912765}
   - component: {fileID: 942630031029912763}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerRangeTest (1)
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &942630031029912766
 Transform:
   m_ObjectHideFlags: 0
@@ -145,7 +145,12 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
+  projectile: {fileID: 1011785504490738528, guid: 3ee95f7a0295fb643b8ec0b441634bdf, type: 3}
+  slashParticle: {fileID: 0}
   timeUntilAttackReadied: 1.5
+  startPosition: {x: 0, y: 0}
+  endPosition: {x: 0, y: 0}
+  direction2D: {x: 0, y: 0}
 --- !u!1 &942630031175040297
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,7 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 942630031175040296}
   - component: {fileID: 942630031175040471}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +242,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4856488076921663866}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttackOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}

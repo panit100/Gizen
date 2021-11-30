@@ -8,6 +8,8 @@ public class SwipeDetection : MonoBehaviour
     private float minDistance = 0.2f;
     [SerializeField]
     private float maxTime = 1f;
+    [SerializeField,Range(0f,1f)]
+    float directionThreshold = 0.9f;
     
     private InputManager inputManager;
 
@@ -15,18 +17,18 @@ public class SwipeDetection : MonoBehaviour
     private float startTime;
     private Vector2 endPosition;
     private float endTime;
-    
+
     private void Awake() {
-        inputManager = InputManager.Instance;
+        // inputManager = InputManager.Instance;
     }
 
     private void OnEnable() {
-        inputManager.OnStartTouch += SwipeStart;
-        inputManager.OnEndTouch += SwipeEnd;
+        // inputManager.OnStartTouch += SwipeStart;
+        // inputManager.OnEndTouch += SwipeEnd;
     }
     private void OnDisable() {
-        inputManager.OnStartTouch += SwipeStart;
-        inputManager.OnEndTouch += SwipeEnd;
+        // inputManager.OnStartTouch += SwipeStart;
+        // inputManager.OnEndTouch += SwipeEnd;
     }
 
     void SwipeStart(Vector2 position, float time){
@@ -48,6 +50,21 @@ public class SwipeDetection : MonoBehaviour
         if(distance >= minDistance && totalTime <= maxTime){
             Debug.Log("Swipe Detection");
             Debug.DrawLine(startPosition,endPosition,Color.red,5f);
+            Vector3 direction3D = endPosition - startPosition;
+            Vector2 direction2D = new Vector2(direction3D.x,direction3D.y).normalized;
+            SwipeDirection(direction2D);
+        }
+    }
+
+    void SwipeDirection(Vector2 direction){
+        if(Vector2.Dot(Vector2.up,direction) >= directionThreshold){
+            Debug.Log("Swiper up");
+        }else if(Vector2.Dot(Vector2.down,direction) >= directionThreshold){
+            Debug.Log("Swiper down");
+        }else if(Vector2.Dot(Vector2.left,direction) >= directionThreshold){
+            Debug.Log("Swiper left");
+        }else if(Vector2.Dot(Vector2.right,direction) >= directionThreshold){
+            Debug.Log("Swiper right");
         }
     }
 
