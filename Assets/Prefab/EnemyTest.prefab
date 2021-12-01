@@ -264,6 +264,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   attackOrigin: {fileID: 708407741}
+  aIDestinationSetter: {fileID: 1298990101}
 --- !u!114 &1298990099
 MonoBehaviour:
   m_ObjectHideFlags: 0

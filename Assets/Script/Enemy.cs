@@ -26,11 +26,14 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public Transform attackOrigin;
 
+    public AIDestinationSetter aIDestinationSetter;
+
 
     // Start is called before the first frame update
     void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
+        aIDestinationSetter.target = FindObjectOfType<Player>().GetComponent<Player>().transform;
 
         currentHealth = maxHealth;
         speed = maxSpeed;
