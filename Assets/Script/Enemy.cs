@@ -27,11 +27,14 @@ public class Enemy : MonoBehaviour, IDamageable
     public Transform attackOrigin;
 
     public AIDestinationSetter aIDestinationSetter;
+    ScoreManager score;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        score = FindObjectOfType<ScoreManager>().GetComponent<ScoreManager>();
+        
         sprite = GetComponent<SpriteRenderer>();
         aIDestinationSetter.target = FindObjectOfType<Player>().GetComponent<Player>().transform;
 
@@ -54,6 +57,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }
 
     void Die(){
+        score.AddScore();
         Destroy(this.gameObject);
     }
 
@@ -82,7 +86,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }    
 
     IEnumerator Attack1(){
-        Debug.Log("Wait for Attack");
+        // Debug.Log("Wait for Attack");
 
         if(attemptedAttack == false){
             attemptedAttack = true;
@@ -93,6 +97,7 @@ public class Enemy : MonoBehaviour, IDamageable
                     Player playerAttributes = overlapCollider.GetComponent<Player>();
                     if(playerAttributes != null){
                         Debug.Log("Attack by Enemy" + Time.time);
+                        playerAttributes.HitPlayer();
                     }
                 }
             }

@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     Rigidbody2D rigidbody;
 
     [Header("Combat")]
+    public int HP = 3;
+    public float currentHitDelay = 0;
+    public float hitDelay = 10f;
     public AttackType playerAttackType = AttackType.MELEEATTACK;
     public Transform attackOrigin = null;
     public float attackRadius = 0.6f;
@@ -26,6 +29,7 @@ public class Player : MonoBehaviour
     bool attemptedDodge = false;
     public bool attemptedAttack = false;
     public float timeUntilAttackReadied = 2f;
+    public float timeUntilDodgeReadied = 3f;
 
     // [Header("SwipeDetect")]
     // InputManager inputManager;
@@ -52,6 +56,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate() {
         Move();
         timeUntilAttackReadied -= Time.deltaTime;
+        currentHitDelay -= Time.deltaTime;
     }
 
     public void Attack(){
@@ -61,6 +66,19 @@ public class Player : MonoBehaviour
         // }else if(playerAttackType == AttackType.RANGEATTACK){
         //     HandleRangeAttack();
         // }
+    }
+    public void HitPlayer(){
+        if(currentHitDelay <= 0){
+            HP -= 1;
+            currentHitDelay = hitDelay;
+        }
+        if(HP <= 0){
+            //DIE
+            FindObjectOfType<ScoreManager>().gameoverUI.SetActive(true);
+            FindObjectOfType<ScoreManager>().SaveScore();
+            Destroy(this.gameObject);
+            return;
+        }
     }
 
     void HandleMeleeAttack(){
