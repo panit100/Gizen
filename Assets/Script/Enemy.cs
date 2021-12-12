@@ -58,6 +58,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     void Die(){
         score.AddScore();
+        FindObjectOfType<Player>().GetComponent<Player>().killed++;
         Destroy(this.gameObject);
     }
 

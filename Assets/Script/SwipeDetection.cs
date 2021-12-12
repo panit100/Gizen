@@ -19,16 +19,16 @@ public class SwipeDetection : MonoBehaviour
     private float endTime;
 
     private void Awake() {
-        // inputManager = InputManager.Instance;
+        inputManager = InputManager.Instance;
     }
 
     private void OnEnable() {
-        // inputManager.OnStartTouch += SwipeStart;
-        // inputManager.OnEndTouch += SwipeEnd;
+        inputManager.OnStartTouch += SwipeStart;
+        inputManager.OnEndTouch += SwipeEnd;
     }
     private void OnDisable() {
-        // inputManager.OnStartTouch += SwipeStart;
-        // inputManager.OnEndTouch += SwipeEnd;
+        inputManager.OnStartTouch += SwipeStart;
+        inputManager.OnEndTouch += SwipeEnd;
     }
 
     void SwipeStart(Vector2 position, float time){
@@ -52,7 +52,7 @@ public class SwipeDetection : MonoBehaviour
             Debug.DrawLine(startPosition,endPosition,Color.red,5f);
             Vector3 direction3D = endPosition - startPosition;
             Vector2 direction2D = new Vector2(direction3D.x,direction3D.y).normalized;
-            SwipeDirection(direction2D);
+            // SwipeDirection(direction2D);
         }
     }
 
