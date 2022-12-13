@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class Enemy : MonoBehaviour, IDamageable
+public class Enemy :  BaseEnemy
 {
     public AIPath aIPath;
     SpriteRenderer sprite;
-
-
-    public float maxHealth = 10f;
+    
     public float outlineOpen = 3f;
     public float outlineClose = -10f;
 
 
     [Header("Status")]
-    public float maxSpeed = 5f;
-    public float speed = 0f;
-    public float currentHealth = 10f;
+    
     public float attackRadius;
     public bool attemptedAttack = false;
 
@@ -27,88 +23,73 @@ public class Enemy : MonoBehaviour, IDamageable
     public Transform attackOrigin;
 
     public AIDestinationSetter aIDestinationSetter;
-    ScoreManager score;
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        score = FindObjectOfType<ScoreManager>().GetComponent<ScoreManager>();
-        
         sprite = GetComponent<SpriteRenderer>();
-        aIDestinationSetter.target = FindObjectOfType<Player>().GetComponent<Player>().transform;
+        aIDestinationSetter.target = FindObjectOfType<PlayerController>().transform;
 
-        currentHealth = maxHealth;
-        speed = maxSpeed;
+        InitCharacter();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         ReachedToPlayer();
         HandleRun();
     }
 
-    public virtual void ApplyDamage(float amount){
-        HitColor(amount);
-        if(currentHealth <= 0){
-            Die();
-        }
+    public override void TakeDamage(float amount){
+        HitColor();
+        base.TakeDamage(amount);
     }
 
-    void Die(){
-        score.AddScore();
-        FindObjectOfType<Player>().GetComponent<Player>().killed++;
-        Destroy(this.gameObject);
+    public override void Die(){
+        ScoreManager.Inst.AddScore();
+        base.Die();
     }
 
-    void HitColor(float amount){
+    void HitColor(){
         StartCoroutine(changeColorRed());
-        StartCoroutine(changeColorBack(amount));
+        StartCoroutine(changeColorBack());
     }
+
     IEnumerator changeColorRed(){
         yield return new WaitForSeconds(0.5f);
         sprite.color = Color.red;
     }
-    IEnumerator changeColorBack(float amount){
+    IEnumerator changeColorBack(){
         yield return new WaitForSeconds(0.75f);
         sprite.color = Color.white;
-        currentHealth -= amount;
-
     }
 
     void ReachedToPlayer(){
-        aIPath.maxSpeed = speed;
+        aIPath.maxSpeed = MoveSpeed;
 
         if(aIPath.whenCloseToDestination == CloseToDestinationMode.Stop && aIPath.reachedEndOfPath){      
-            speed = 0;
-            StartCoroutine(Attack1());
+            MoveSpeed = 0;
+            StartCoroutine(Attack());
         }
     }    
 
-    IEnumerator Attack1(){
-        // Debug.Log("Wait for Attack");
-
+    IEnumerator Attack(){
         if(attemptedAttack == false){
             attemptedAttack = true;
             yield return new WaitForSeconds(3f);
             if(attemptedAttack){
                 Collider2D overlapCollider = Physics2D.OverlapCircle(attackOrigin.position,attackRadius,playerLayer);
                 if(overlapCollider != null){
-                    Player playerAttributes = overlapCollider.GetComponent<Player>();
+                    PlayerHealth playerAttributes = overlapCollider.GetComponent<PlayerHealth>();
                     if(playerAttributes != null){
                         Debug.Log("Attack by Enemy" + Time.time);
                         playerAttributes.HitPlayer();
                     }
                 }
             }
-            speed = maxSpeed;
+            MoveSpeed = MaxSpeed;
             attemptedAttack = false;
         }
     }
 
-
-    //ememy must turn to player all time
     void HandleRun(){
         if(aIPath.desiredVelocity.x > 0){
             transform.rotation = Quaternion.Euler(0,0,0);

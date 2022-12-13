@@ -10,13 +10,6 @@ public class SpawnManager : MonoBehaviour
     public int enemyAmount = 0;
     public int enemyLeft = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void FixedUpdate()
     {
         InstantiateEnemys();
@@ -24,7 +17,6 @@ public class SpawnManager : MonoBehaviour
 
     void InstantiateEnemys(){
         StartCoroutine("RandomSpawnEnemys");
-
     }
 
     IEnumerator RandomSpawnEnemys(){

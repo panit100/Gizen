@@ -7,7 +7,7 @@ public class EnemyAI1 : MonoBehaviour
     public List<Vector2> ray = new List<Vector2>();
     public List<float> dot = new List<float>();
     public List<float> weight = new List<float>();
-    public Player player;
+    public PlayerManager player;
     public float moveSpeed = 0;
     public float radius = 1;
     public Rigidbody2D rigidbody;

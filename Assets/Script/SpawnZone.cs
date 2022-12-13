@@ -7,7 +7,7 @@ public abstract class SpawnZone : MonoBehaviour
     public float waitUntilWaveStart = 3f;
     public List<Transform> Enemys = new List<Transform>();
     public int enemyAmount = 0;
-    public int enemyLeft = 0;
+    public int uncreateEnemy = 0;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -22,11 +22,11 @@ public abstract class SpawnZone : MonoBehaviour
     IEnumerator Wave(){
         yield return new WaitForSeconds(waitUntilWaveStart);
 
-        if(FindObjectOfType<Enemy>() != null || enemyLeft > 0){
+        if(FindObjectOfType<Enemy>() != null || uncreateEnemy > 0){
             yield return null;
         }else{
             enemyAmount += Random.Range(1,3);
-            enemyLeft = enemyAmount;
+            uncreateEnemy = enemyAmount;
 
             for(int n = 1; n <= enemyAmount; n++){
                 Invoke("RandomSpawnEnemy",Random.Range(0f,2f));
@@ -37,7 +37,7 @@ public abstract class SpawnZone : MonoBehaviour
     void RandomSpawnEnemy(){
         CreateEnemy();
 
-        enemyLeft -= 1;
+        uncreateEnemy -= 1;
     }
 
     public abstract Vector2 SpawnPoint{

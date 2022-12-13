@@ -6,26 +6,25 @@ public class Projectile : MonoBehaviour
 {
     Rigidbody2D rigidbody;
     public float speed = 10f;
-    public float damge = 1f;
-    public float delaySeconds = 3f;
+    public float damage = 1f;
+    public float timeToDestroy = 1f;
 
-    WaitForSeconds cullDelay = null;
-    public int enemyLayer = 3;
     Transform target;
-    // Start is called before the first frame update
+
     void Start()
     {
-        cullDelay = new WaitForSeconds(delaySeconds);
-        StartCoroutine(DelayCull());
-
+        StartCoroutine(DestroyProjectile());
         rigidbody = GetComponent<Rigidbody2D>();
-        
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         transform.position = Vector2.MoveTowards(transform.position,target.position,speed);
+    }
+
+    public void SetDamage(float _damage)
+    {
+        damage = _damage;
     }
 
     public void SetTraget(Transform _target){
@@ -33,20 +32,14 @@ public class Projectile : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("Hit Something");
-        if(other.gameObject.layer == enemyLayer){
-            Debug.Log("Hit Enemy");
-            IDamageable enemyAttribute = other.GetComponent<IDamageable>();
-            if(enemyAttribute != null){
-                enemyAttribute.ApplyDamage(damge);
-            }
-
+        if(other.transform.Equals(target)){
+            target.GetComponent<BaseEnemy>().TakeDamage(damage);
             Destroy(this.gameObject);
         }
     }
 
-    IEnumerator DelayCull(){
-        yield return cullDelay;
+    IEnumerator DestroyProjectile(){
+        yield return new WaitUntil(() => target.Equals(null));
         Destroy(this.gameObject);
     }
 }

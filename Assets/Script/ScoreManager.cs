@@ -6,13 +6,14 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
+    public static ScoreManager Inst;
     int score = 0;
 
     public TextMeshProUGUI scoreText;
 
     public TextMeshProUGUI scoreText1,scoreText2,scoreText3;
     public int score1,score2,score3;
-    
+
     [Header("GameOver")]
     public GameObject gameoverUI;
     public TextMeshProUGUI gameoverScoreText;
@@ -20,7 +21,7 @@ public class ScoreManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Inst = this;
     }
 
     // Update is called once per frame
@@ -35,7 +36,7 @@ public class ScoreManager : MonoBehaviour
         }
 
         if(gameoverScoreText != null){
-            GameOverText();
+            SetGameOverText();
         }
     }
 
@@ -56,9 +57,7 @@ public class ScoreManager : MonoBehaviour
                     PlayerPrefs.SetInt("Score2",score1);
                     PlayerPrefs.SetInt("Score1",lastscore);
                 }
-                
             }
-            
         }
 
         PlayerPrefs.Save();
@@ -72,14 +71,19 @@ public class ScoreManager : MonoBehaviour
         scoreText1.text = score1.ToString();
         scoreText2.text = score2.ToString();
         scoreText3.text = score3.ToString();
+    }
 
+    public void OnGameOver()
+    {
+        gameoverUI.SetActive(true);
+        SaveScore();
     }
 
     public void ResetScore(){
         PlayerPrefs.DeleteAll();
     }
 
-    void GameOverText(){
+    void SetGameOverText(){
         gameoverScoreText.text = "Score : " + score;
         highScoreText.text = "HighScore : " + PlayerPrefs.GetInt("Score1",0);
     }

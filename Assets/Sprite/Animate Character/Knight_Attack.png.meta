@@ -42,6 +42,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -256,6 +257,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Knight_Attack_3: 8154952217615005867
+      Knight_Attack_5: -4511132201064091179
+      Knight_Attack_0: 7442079067065649627
+      Knight_Attack_4: -842675162766002549
+      Knight_Attack_2: -908522120702514673
+      Knight_Attack_1: 4754036034325592855
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
